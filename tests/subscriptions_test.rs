@@ -52,4 +52,28 @@ mod test {
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(response.into_string(), None);
     }
+
+    #[test]
+    fn subscribe_returns_a_400_when_data_is_missing() {
+        let client = super::setup::blocking_client();
+        let test_cases = vec![
+            ("name=some%20one", "missing the email"),
+            ("email=someone@gmail.com", "missing the name"),
+            ("", "missing both name and email"),
+        ];
+
+        for (invalid_body, error_message) in test_cases {
+            let response = client
+                .post("/subscriptions")
+                .header(ContentType::Form)
+                .body(invalid_body)
+                .dispatch();
+            assert_eq!(
+                response.status(),
+                Status::BadRequest,
+                "The API did not fail with HTTP 400 when the payload was {}.",
+                error_message
+            );
+        }
+    }
 }
