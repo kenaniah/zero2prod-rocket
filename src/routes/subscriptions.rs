@@ -1,0 +1,2 @@
+#[post("/")]
+pub fn subscribe() {}

@@ -7,6 +7,11 @@ use rocket::UriDisplayQuery;
 struct Body<'a> {
     name: Option<&'a str>,
     email: Option<&'a str>,
+    arr: Vec<u8>,
+}
+
+impl UriDisplay<Query> for Vec<u8> {
+    
 }
 
 impl Body<'_> {
@@ -26,11 +31,13 @@ mod test {
         let body = Body {
             name: Some("Some One"),
             email: Some("foo@example.com"),
+            arr: vec![2, 4, 5]
         };
         assert_eq!(body.to_uri(), "name=Some%20One&email=foo@example.com");
         let body = Body {
             name: None,
             email: None,
+            arr: vec![12, 12, 5, 12]
         };
         assert_eq!(body.to_uri(), "");
     }
@@ -45,6 +52,7 @@ mod test {
                 Body {
                     name: Some("Some Person"),
                     email: Some("someone@example.com"),
+                    arr: vec![]
                 }
                 .to_uri(),
             )
