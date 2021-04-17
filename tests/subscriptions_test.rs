@@ -54,7 +54,7 @@ mod test {
     }
 
     #[test]
-    fn subscribe_returns_a_400_when_data_is_missing() {
+    fn subscribe_returns_a_422_when_data_is_missing() {
         let client = super::setup::blocking_client();
         let test_cases = vec![
             ("name=some%20one", "missing the email"),
@@ -70,8 +70,8 @@ mod test {
                 .dispatch();
             assert_eq!(
                 response.status(),
-                Status::BadRequest,
-                "The API did not fail with HTTP 400 when the payload was {}.",
+                Status::UnprocessableEntity,
+                "The API did not fail with HTTP 422 when the payload was {}.",
                 error_message
             );
         }

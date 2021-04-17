@@ -2,11 +2,7 @@
 extern crate rocket;
 extern crate zero2prod;
 
-use rocket::Rocket;
-
-mod routes;
-
 #[launch]
-pub fn ignite() -> Rocket {
+pub fn ignite() -> rocket::Rocket {
     zero2prod::app()
 }
