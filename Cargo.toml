@@ -14,8 +14,9 @@ path = "src/lib.rs"
 config = "0.11.0"
 rocket = { git = "https://github.com/SergioBenitez/Rocket" }
 rocket_codegen = { git = "https://github.com/SergioBenitez/Rocket" }
-sqlx = { version = "0.5.2", default_features = false, features = ["runtime-tokio-native-tls", "postgres", "migrate", "uuid", "chrono", "json", "macros"] }
+diesel = { version = "1", features = ["postgres", "extras"] }
 serde = "1.0.125"
 
 [dependencies.rocket_contrib]
 git = "https://github.com/SergioBenitez/Rocket"
+features = ["diesel_postgres_pool"]
