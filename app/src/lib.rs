@@ -12,8 +12,8 @@ use routes::{health_check, subscriptions};
 
 use db::{PgConnection, r2d2::{ConnectionManager, Pool, PooledConnection}};
 
-pub type PgPool = Pool<ConnectionManager<PgConnection>>;
-pub type PgPooledConnection = PooledConnection<ConnectionManager<PgConnection>>;
+type PgPool = Pool<ConnectionManager<PgConnection>>;
+type PgPooledConnection = PooledConnection<ConnectionManager<PgConnection>>;
 pub struct MainDatabase(PgPool);
 pub struct MainConnection(PgPooledConnection);
 
