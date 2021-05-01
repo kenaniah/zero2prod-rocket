@@ -1,4 +1,4 @@
-use crate::MainDatabase;
+use crate::MainConnection;
 use diesel::RunQueryDsl;
 use rocket::form::Form;
 
@@ -13,9 +13,9 @@ pub struct FormData {
 }
 
 #[post("/", data = "<data>")]
-pub fn subscribe(db: MainDatabase, data: Form<FormData>) {
+pub fn subscribe(db: MainConnection, data: Form<FormData>) {
     let _res: Subscription = diesel::insert_into(subscriptions::table)
         .values(data.into_inner())
-        .get_result(&db.0.get().unwrap())
+        .get_result(&*db)
         .unwrap();
 }
