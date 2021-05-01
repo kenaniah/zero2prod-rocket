@@ -1,8 +1,8 @@
 #[macro_use]
 extern crate rocket;
-extern crate zero2prod;
+extern crate app;
 
 #[launch]
 pub fn ignite() -> rocket::Rocket {
-    zero2prod::app()
+    app::app()
 }
