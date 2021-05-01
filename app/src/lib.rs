@@ -4,7 +4,8 @@ extern crate rocket;
 extern crate db;
 
 mod routes;
-use rocket::{data::Outcome, request::{self, Request, FromRequest}};
+
+use rocket::{request::{Request, FromRequest}};
 use routes::{health_check, subscriptions};
 
 use db::{PgConnection, r2d2::{ConnectionManager, Pool, PooledConnection}};
@@ -13,12 +14,12 @@ pub type PgPool = Pool<ConnectionManager<PgConnection>>;
 pub type PgPooledConnection = PooledConnection<ConnectionManager<PgConnection>>;
 pub struct MainDatabase(PgPool);
 
-impl<'a, 'r> FromRequest<'r> for MainDatabase {
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for MainDatabase {
     type Error = ();
 
-    fn from_request(request: &'a Request<'r>) -> Outcome<Self, Self::Error> {
-        let pool = request.guard::<Self>();
-        Outcome::Success(pool.await)
+    async fn from_request(request: &'r Request<'_>) -> rocket::request::Outcome<MainDatabase, Self::Error> {
+        request.guard::<Self>().await
     }
 
 }

@@ -14,8 +14,8 @@ pub struct FormData {
 
 #[post("/", data = "<data>")]
 pub fn subscribe(db: MainDatabase, data: Form<FormData>) {
-    let res: Subscription = diesel::insert_into(subscriptions::table)
+    let _res: Subscription = diesel::insert_into(subscriptions::table)
         .values(data.into_inner())
-        .get_result(&db)
+        .get_result(&db.0.get().unwrap())
         .unwrap();
 }
