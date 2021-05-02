@@ -14,7 +14,6 @@ pub struct FormData {
 
 #[post("/", data = "<data>")]
 pub fn subscribe(db: MainConnection, data: Form<FormData>) {
-    println!("{:?}", data);
     let _res: Subscription = diesel::insert_into(subscriptions::table)
         .values(data.into_inner())
         .get_result(&*db)

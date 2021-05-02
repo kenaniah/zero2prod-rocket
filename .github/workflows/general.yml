@@ -9,6 +9,18 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -16,6 +28,11 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - run: |
+          cargo install diesel_cli --no-default-features --features postgres
+          cd db/
+          diesel database setup
+          cd ../
       - uses: actions-rs/cargo@v1
         with:
           command: test
@@ -53,6 +70,18 @@ jobs:
   coverage:
     name: Code coverage
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -62,7 +91,11 @@ jobs:
         with:
           toolchain: stable
           override: true
-
+      - run: |
+          cargo install diesel_cli --no-default-features --features postgres
+          cd db/
+          diesel database setup
+          cd ../
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@v0.1
         with:
