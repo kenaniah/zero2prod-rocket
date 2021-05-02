@@ -29,7 +29,8 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: kenaniah/diesel-cli-action@master
+      - name: Provision the database
+        uses: kenaniah/diesel-cli-action@master
         with:
           migration_directories: db/
       - uses: actions-rs/cargo@v1
@@ -91,7 +92,8 @@ jobs:
         with:
           toolchain: stable
           override: true
-      - uses: kenaniah/diesel-cli-action@master
+      - name: Provision the database
+        uses: kenaniah/diesel-cli-action@master
         with:
           migration_directories: db/
       - name: Run cargo-tarpaulin
