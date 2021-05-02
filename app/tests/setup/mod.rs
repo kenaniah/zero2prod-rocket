@@ -10,7 +10,7 @@ use db::{
 
 fn run_sql(query: &str) {
     // Establish a connection to the default database
-    let template: ConnectionManager<PgConnection> = ConnectionManager::new("postgres:///postgres");
+    let template: ConnectionManager<PgConnection> = ConnectionManager::new("postgres://localhost/postgres");
     let pool = Pool::builder()
         .max_size(1)
         .connection_timeout(std::time::Duration::from_millis(100))
@@ -40,7 +40,7 @@ impl MockEnvironment {
         // Create the temporary database
         run_sql(&format!("CREATE DATABASE {} TEMPLATE zero2prod", db_name));
 
-        let db_url = format!("postgres:///{}", db_name);
+        let db_url = format!("postgres://localhost/{}", db_name);
         MockEnvironment {
             db_name,
             client: Some(Client::tracked(app::app(&db_url)).expect("valid rocket instance")),
