@@ -18,13 +18,14 @@ fn run_sql(query: &str) {
         .build(template)
         .unwrap();
     let conn = pool.get().unwrap();
-
+    // Execute the given query
     use db::RunQueryDsl;
     diesel::sql_query(query)
         .execute(&conn)
         .expect(&format!("Query failed: {}", query));
 }
 
+/// Stores a unique, thread-safe mock environment to be used within tests.
 pub struct MockEnvironment {
     db_name: String,
     client: Option<Client>,
