@@ -1,3 +1,5 @@
+use app::{MainDatabase, PgPooledConnection};
+use rand;
 use rocket::local::blocking::Client;
 use std::time::SystemTime;
 
@@ -33,7 +35,7 @@ impl MockEnvironment {
         let t = SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)
             .unwrap();
-        let db_name = format!("zero2prod_{}_{}", t.as_secs(), t.subsec_nanos());
+        let db_name = format!("zero2prod_{}_{}", t.as_secs(), rand::random::<u8>());
 
         // Create the temporary database
         run_sql(&format!("CREATE DATABASE {} TEMPLATE zero2prod", db_name));
@@ -46,6 +48,11 @@ impl MockEnvironment {
     }
     pub fn client(&mut self) -> &mut Client {
         self.client.as_mut().unwrap()
+    }
+    #[allow(dead_code)]
+    pub fn connection(&mut self) -> PgPooledConnection {
+        let pool = self.client().rocket().state::<MainDatabase>().unwrap();
+        pool.get().unwrap()
     }
 }
 

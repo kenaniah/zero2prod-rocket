@@ -17,6 +17,7 @@ diesel = { version = "1", features = ["postgres", "extras", "chrono"] }
 serde = "1.0.125"
 chrono = "*"
 db = { path = "../db" }
+rand = "0"
 
 [dependencies.rocket_contrib]
 git = "https://github.com/SergioBenitez/Rocket"

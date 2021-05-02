@@ -16,10 +16,18 @@ use db::{
     PgConnection,
 };
 
-type PgPool = Pool<ConnectionManager<PgConnection>>;
-type PgPooledConnection = PooledConnection<ConnectionManager<PgConnection>>;
-struct MainDatabase(PgPool);
+pub type PgPool = Pool<ConnectionManager<PgConnection>>;
+pub type PgPooledConnection = PooledConnection<ConnectionManager<PgConnection>>;
+pub struct MainDatabase(PgPool);
 pub struct MainConnection(PgPooledConnection);
+
+impl Deref for MainDatabase {
+    type Target = PgPool;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 impl Deref for MainConnection {
     type Target = PgPooledConnection;
@@ -36,7 +44,7 @@ impl<'r> FromRequest<'r> for MainConnection {
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
         let res = request.rocket().state::<MainDatabase>();
         if let Some(pool) = res {
-            match pool.0.get() {
+            match pool.get() {
                 Ok(conn) => Outcome::Success(MainConnection(conn)),
                 Err(_) => Outcome::Failure((Status::ServiceUnavailable, ())),
             }

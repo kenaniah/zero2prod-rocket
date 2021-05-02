@@ -2,5 +2,5 @@
 extern crate diesel;
 pub use diesel::*;
 
-pub mod schema;
 pub mod models;
+pub mod schema;

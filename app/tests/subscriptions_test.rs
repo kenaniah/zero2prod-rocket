@@ -1,5 +1,6 @@
 mod setup;
 
+use db;
 use rocket::http::uri::{Query, UriDisplay};
 use rocket::UriDisplayQuery;
 
@@ -19,6 +20,8 @@ impl Body<'_> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use db::models::Subscription;
+    use diesel::prelude::*;
     use rocket::http::{ContentType, Status};
 
     #[test]
@@ -37,7 +40,10 @@ mod test {
 
     #[test]
     fn subscribe_returns_a_200_for_valid_form_data() {
+        // Set up the mock environment
         let mut env = super::setup::MockEnvironment::new();
+
+        // Submit the POST request
         let client = env.client();
         let response = client
             .post("/subscriptions")
@@ -52,6 +58,13 @@ mod test {
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(response.into_string(), None);
+
+        // Check the database state
+        let conn = env.connection();
+        use db::schema::subscriptions::dsl::*;
+        let row: Subscription = subscriptions.order_by(id.desc()).first(&conn).unwrap();
+        assert_eq!(row.name, "Some One");
+        assert_eq!(row.email, "someone@gmail.com");
     }
 
     #[test]
