@@ -31,9 +31,8 @@ jobs:
           override: true
       - name: Provision the database
         uses: docker://kenaniah/diesel-cli-action:v1
-        with:
-          working_directories: db/
         env:
+          WORKING_DIRECTORIES: db/
           DATABASE_URL: postgres://runner@postgres/zero2prod
       - uses: actions-rs/cargo@v1
         with:
@@ -96,9 +95,8 @@ jobs:
           override: true
       - name: Provision the database
         uses: docker://kenaniah/diesel-cli-action:v1
-        with:
-          working_directories: db/
         env:
+          WORKING_DIRECTORIES: db/
           DATABASE_URL: postgres://runner@postgres/zero2prod
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@v0.1
