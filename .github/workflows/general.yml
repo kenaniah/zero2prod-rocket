@@ -29,11 +29,10 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - run: |
-          cargo install diesel_cli --no-default-features --features postgres
-          cd db/
-          diesel database setup
-          cd ../
+      - uses: kenaniah/diesel-cli-action@master
+        with:
+          migration_directories:
+            - db/
       - uses: actions-rs/cargo@v1
         with:
           command: test
@@ -93,11 +92,10 @@ jobs:
         with:
           toolchain: stable
           override: true
-      - run: |
-          cargo install diesel_cli --no-default-features --features postgres
-          cd db/
-          diesel database setup
-          cd ../
+      - uses: kenaniah/diesel-cli-action@master
+        with:
+          migration_directories:
+            - db/
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@v0.1
         with:
