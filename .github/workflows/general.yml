@@ -30,7 +30,7 @@ jobs:
           toolchain: stable
           override: true
       - name: Provision the database
-        uses: kenaniah/diesel-cli-action@master
+        uses: kenaniah/diesel-cli-action@v1
         with:
           migration_directories: db/
         env:
@@ -95,7 +95,7 @@ jobs:
           toolchain: stable
           override: true
       - name: Provision the database
-        uses: kenaniah/diesel-cli-action@master
+        uses: kenaniah/diesel-cli-action@v1
         with:
           migration_directories: db/
         env:
