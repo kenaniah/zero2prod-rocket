@@ -10,7 +10,8 @@ use db::{
 
 fn run_sql(query: &str) {
     // Establish a connection to the default database
-    let template: ConnectionManager<PgConnection> = ConnectionManager::new("postgres://localhost/postgres");
+    let template: ConnectionManager<PgConnection> =
+        ConnectionManager::new("postgres://localhost/postgres");
     let pool = Pool::builder()
         .max_size(1)
         .connection_timeout(std::time::Duration::from_millis(100))
