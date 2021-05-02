@@ -104,3 +104,8 @@ jobs:
         uses: actions-rs/tarpaulin@v0.1
         with:
           args: '--ignore-tests'
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage-report
+          path: cobertura.xml
