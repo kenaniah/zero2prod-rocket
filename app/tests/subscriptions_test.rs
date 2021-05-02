@@ -37,7 +37,8 @@ mod test {
 
     #[test]
     fn subscribe_returns_a_200_for_valid_form_data() {
-        let client = super::setup::blocking_client();
+        let mut env = super::setup::MockEnvironment::new();
+        let client = env.client();
         let response = client
             .post("/subscriptions")
             .header(ContentType::Form)
@@ -55,7 +56,8 @@ mod test {
 
     #[test]
     fn subscribe_returns_a_422_when_data_is_missing() {
-        let client = super::setup::blocking_client();
+        let mut env = super::setup::MockEnvironment::new();
+        let client = env.client();
         let test_cases = vec![
             ("name=some%20one", "missing the email"),
             ("email=someone@gmail.com", "missing the name"),

@@ -6,7 +6,8 @@ mod test {
 
     #[test]
     fn health_check() {
-        let client = super::setup::blocking_client();
+        let mut env = super::setup::MockEnvironment::new();
+        let client = env.client();
         let response = client.get("/health_check").dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(response.into_string(), None);

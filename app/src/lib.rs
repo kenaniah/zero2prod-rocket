@@ -8,7 +8,7 @@ mod routes;
 use std::ops::Deref;
 
 use rocket::http::Status;
-use rocket::request::{FromRequest, Request, Outcome};
+use rocket::request::{FromRequest, Outcome, Request};
 use routes::{health_check, subscriptions};
 
 use db::{
@@ -38,7 +38,7 @@ impl<'r> FromRequest<'r> for MainConnection {
         if let Some(pool) = res {
             match pool.0.get() {
                 Ok(conn) => Outcome::Success(MainConnection(conn)),
-                Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))
+                Err(_) => Outcome::Failure((Status::ServiceUnavailable, ())),
             }
         } else {
             Outcome::Failure((Status::ServiceUnavailable, ()))
@@ -46,12 +46,19 @@ impl<'r> FromRequest<'r> for MainConnection {
     }
 }
 
-pub fn app() -> rocket::Rocket<rocket::Build> {
-    let manager: ConnectionManager<PgConnection> = ConnectionManager::new("postgres:///zero2prod");
-    let pool = Pool::builder().build(manager).unwrap();
-
+pub fn app(db_url: &str) -> rocket::Rocket<rocket::Build> {
     rocket::build()
-        .manage::<MainDatabase>(MainDatabase(pool))
+        .manage::<MainDatabase>(main_database_pool(db_url))
         .mount("/health_check", routes![health_check::health_check])
         .mount("/subscriptions", routes![subscriptions::subscribe])
+}
+
+/// Builds a connection pool for the main database
+fn main_database_pool(db_url: &str) -> MainDatabase {
+    let manager: ConnectionManager<PgConnection> = ConnectionManager::new(db_url);
+    let pool = Pool::builder()
+        .connection_timeout(std::time::Duration::from_millis(500))
+        .build(manager)
+        .unwrap();
+    MainDatabase(pool)
 }
