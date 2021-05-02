@@ -7,7 +7,7 @@ mod routes;
 
 use std::ops::Deref;
 
-use rocket::request::{FromRequest, Request};
+use rocket::request::{FromRequest, Request, Outcome};
 use routes::{health_check, subscriptions};
 
 use db::{
@@ -32,12 +32,15 @@ impl Deref for MainConnection {
 impl<'r> FromRequest<'r> for MainConnection {
     type Error = ();
 
-    async fn from_request(request: &'r Request<'_>) -> rocket::request::Outcome<Self, Self::Error> {
+    async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
         let res = request.rocket().state::<MainDatabase>();
         if let Some(pool) = res {
-            rocket::outcome::Outcome::Success(MainConnection(pool.0.get().unwrap()))
+            match pool.0.get() {
+                Ok(conn) => Outcome::Success(MainConnection(conn)),
+                Err(_) => Outcome::Failure((rocket::http::Status::ServiceUnavailable, ()))
+            }
         } else {
-            rocket::request::Outcome::Failure((rocket::http::Status::ServiceUnavailable, ()))
+            Outcome::Failure((rocket::http::Status::ServiceUnavailable, ()))
         }
     }
 }
