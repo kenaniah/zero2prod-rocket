@@ -32,6 +32,7 @@ pub struct MockEnvironment {
 }
 
 impl MockEnvironment {
+    /// Generates a temporary database, returning a unique mock environment for testing.
     pub fn new() -> Self {
         // Generate a name for the temporary database based on the current time
         let t = SystemTime::now()
@@ -48,6 +49,7 @@ impl MockEnvironment {
             client: Some(Client::tracked(app::app(&db_url)).expect("valid rocket instance")),
         }
     }
+    /// Returns a blocking client to the rocket application under test.
     pub fn client(&mut self) -> &mut Client {
         self.client.as_mut().unwrap()
     }
