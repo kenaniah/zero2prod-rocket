@@ -11,7 +11,7 @@ fn run_sql(query: &str) {
     let template: ConnectionManager<PgConnection> = ConnectionManager::new("postgres:///postgres");
     let pool = Pool::builder()
         .max_size(1)
-        .connection_timeout(std::time::Duration::from_millis(10))
+        .connection_timeout(std::time::Duration::from_millis(100))
         .build(template)
         .unwrap();
     let conn = pool.get().unwrap();
@@ -53,7 +53,7 @@ impl Drop for MockEnvironment {
     fn drop(&mut self) {
         // Drop the client first to disconnect from the DB
         self.client = None;
-        // Physically drop the testing database
+        // Then physically drop the testing database
         run_sql(&format!("DROP DATABASE IF EXISTS {}", self.db_name));
     }
 }
