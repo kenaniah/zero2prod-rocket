@@ -7,6 +7,7 @@ mod routes;
 
 use std::ops::Deref;
 
+use rocket::http::Status;
 use rocket::request::{FromRequest, Request, Outcome};
 use routes::{health_check, subscriptions};
 
@@ -37,10 +38,10 @@ impl<'r> FromRequest<'r> for MainConnection {
         if let Some(pool) = res {
             match pool.0.get() {
                 Ok(conn) => Outcome::Success(MainConnection(conn)),
-                Err(_) => Outcome::Failure((rocket::http::Status::ServiceUnavailable, ()))
+                Err(_) => Outcome::Failure((Status::ServiceUnavailable, ()))
             }
         } else {
-            Outcome::Failure((rocket::http::Status::ServiceUnavailable, ()))
+            Outcome::Failure((Status::ServiceUnavailable, ()))
         }
     }
 }
