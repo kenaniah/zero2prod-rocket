@@ -65,7 +65,7 @@ pub fn app(db_url: &str) -> rocket::Rocket<rocket::Build> {
 fn main_database_pool(db_url: &str) -> MainDatabase {
     let manager: ConnectionManager<PgConnection> = ConnectionManager::new(db_url);
     let pool = Pool::builder()
-        .connection_timeout(std::time::Duration::from_millis(500))
+        .connection_timeout(std::time::Duration::from_millis(5000))
         .build(manager)
         .unwrap();
     MainDatabase(pool)
