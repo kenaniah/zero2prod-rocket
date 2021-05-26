@@ -38,7 +38,7 @@ impl IdentityFairing {
 impl Fairing for IdentityFairing {
     fn info(&self) -> Info {
         Info {
-            name: "RequestId",
+            name: "IdentityFairing",
             kind: match self.output_as_header {
                 true => Kind::Singleton | Kind::Request | Kind::Response,
                 false => Kind::Singleton | Kind::Request,
