@@ -5,8 +5,8 @@ extern crate rocket;
 #[macro_use]
 extern crate db;
 
-mod routes;
 mod fairings;
+mod routes;
 
 use std::ops::Deref;
 
@@ -14,7 +14,7 @@ use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
 use routes::{health_check, subscriptions};
 
-use fairings::request_id::RequestIdentity;
+use fairings::request_id::IdentityFairing;
 
 use db::{
     r2d2::{ConnectionManager, Pool, PooledConnection},
@@ -61,7 +61,7 @@ impl<'r> FromRequest<'r> for MainConnection {
 
 pub fn app(db_url: &str) -> rocket::Rocket<rocket::Build> {
     rocket::build()
-        .attach(RequestIdentity::default().set_output_as_header(true))
+        .attach(IdentityFairing::default().set_output_as_header(true))
         .manage::<MainDatabase>(main_database_pool(db_url))
         .mount("/health_check", routes![health_check::health_check])
         .mount("/subscriptions", routes![subscriptions::subscribe])
