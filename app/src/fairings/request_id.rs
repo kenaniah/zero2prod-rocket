@@ -39,7 +39,10 @@ impl Fairing for IdentityFairing {
     fn info(&self) -> Info {
         Info {
             name: "RequestId",
-            kind: Kind::Request | Kind::Response | Kind::Singleton,
+            kind: match self.output_as_header {
+                true => Kind::Singleton | Kind::Request | Kind::Response,
+                false => Kind::Singleton | Kind::Request,
+            },
         }
     }
 
@@ -60,10 +63,8 @@ impl Fairing for IdentityFairing {
     }
 
     async fn on_response<'r>(&self, request: &'r Request<'_>, response: &mut Response<'r>) {
-        if self.output_as_header {
-            if let Content(Some(id)) = request.local_cache(|| Content(None)) {
-                response.set_raw_header("X-Request-Id", id);
-            }
+        if let Content(Some(id)) = request.local_cache(|| Content(None)) {
+            response.set_raw_header("X-Request-Id", id);
         }
     }
 }
