@@ -7,10 +7,18 @@ use uuid::Uuid;
 
 struct Content(Option<String>);
 
-#[derive(Default)]
 pub struct IdentityFairing {
     read_from_header: bool,
     output_as_header: bool,
+}
+
+impl Default for IdentityFairing {
+    fn default() -> Self {
+        Self {
+            read_from_header: true,
+            output_as_header: true,
+        }
+    }
 }
 
 impl IdentityFairing {
@@ -46,7 +54,7 @@ impl Fairing for IdentityFairing {
 
         request.local_cache(|| {
             Content(Some(
-                identifier.unwrap_or_else(|| Uuid::new_v4().hyphenated().to_string()),
+                identifier.unwrap_or_else(|| Uuid::new_v4().simple().to_string()),
             ))
         });
     }

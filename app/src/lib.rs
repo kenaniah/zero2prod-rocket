@@ -61,7 +61,7 @@ impl<'r> FromRequest<'r> for MainConnection {
 
 pub fn app(db_url: &str) -> rocket::Rocket<rocket::Build> {
     rocket::build()
-        .attach(IdentityFairing::default().set_output_as_header(true))
+        .attach(IdentityFairing::default())
         .manage::<MainDatabase>(main_database_pool(db_url))
         .mount("/health_check", routes![health_check::health_check])
         .mount("/subscriptions", routes![subscriptions::subscribe])
