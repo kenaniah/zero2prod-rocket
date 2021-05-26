@@ -18,7 +18,8 @@ serde = "1.0.125"
 chrono = "*"
 db = { path = "../db" }
 rand = "0"
+tracing = { version = "0", features = ["log"] }
 
-[dependencies.rocket_contrib]
+[dependencies.rocket_sync_db_pools]
 git = "https://github.com/SergioBenitez/Rocket"
 features = ["diesel_postgres_pool"]

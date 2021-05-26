@@ -1,7 +1,7 @@
 mod setup;
 
 use db;
-use rocket::http::uri::{Query, UriDisplay};
+use rocket::http::uri::fmt::{Query, UriDisplay};
 use rocket::UriDisplayQuery;
 
 #[derive(UriDisplayQuery)]
