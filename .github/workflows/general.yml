@@ -30,7 +30,7 @@ jobs:
           toolchain: stable
           override: true
       - name: Provision the database
-        uses: docker://kenaniah/diesel-cli-action:v1
+        uses: kenaniah/diesel-cli-action@v1
         env:
           WORKING_DIRECTORIES: db/
           DATABASE_URL: postgres://runner@postgres/zero2prod
@@ -94,7 +94,7 @@ jobs:
           toolchain: stable
           override: true
       - name: Provision the database
-        uses: docker://kenaniah/diesel-cli-action:v1
+        uses: kenaniah/diesel-cli-action@v1
         env:
           WORKING_DIRECTORIES: db/
           DATABASE_URL: postgres://runner@postgres/zero2prod
