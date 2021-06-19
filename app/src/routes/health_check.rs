@@ -1,5 +1,5 @@
-use rocket::http::Status;
 use crate::fairings::request_id::RequestId;
+use rocket::http::Status;
 
 #[get("/")]
 pub fn health_check(rid: RequestId) -> Status {

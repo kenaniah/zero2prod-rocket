@@ -46,7 +46,7 @@ impl Fairing for IdentityFairing {
         }
     }
 
-    async fn on_request(&self, request: &mut Request<'_>, _data: &mut Data) {
+    async fn on_request(&self, request: &mut Request<'_>, _data: &mut Data<'_>) {
         let identifier = match self.read_from_header {
             true => request
                 .headers()
@@ -57,7 +57,7 @@ impl Fairing for IdentityFairing {
 
         request.local_cache(|| {
             Content(Some(
-                identifier.unwrap_or_else(|| Uuid::new_v4().simple().to_string()),
+                identifier.unwrap_or_else(|| Uuid::new_v4().to_string()),
             ))
         });
     }
