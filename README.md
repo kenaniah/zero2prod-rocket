@@ -15,6 +15,12 @@
 # Build
 docker build . -t kenaniah/zero2prod-rocket:latest
 
+# Launch
+docker run -it -e DATABASE_URL=postgres://kenaniah@host.docker.internal/zero2prod -p 8000:8000 kenaniah/zero2prod-rocket
+
 # Debug
-docker run -it -e DATABASE_URL=postgres://kenaniah@host.docker.internal/zero2prod -p 8000:8000 --entrypoint=/bin/bash kenaniah/zero2prod-rocket
+docker run -it -e DATABASE_URL=postgres://kenaniah@host.docker.internal/zero2prod kenaniah/zero2prod-rocket bash
+
+# DB Migrations
+docker run -it -e DATABASE_URL=postgres://kenaniah@host.docker.internal/zero2prod kenaniah/zero2prod-rocket diesel database setup
 ```

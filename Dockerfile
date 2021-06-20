@@ -33,4 +33,4 @@ EXPOSE 8000
 COPY --from=diesel /usr/local/cargo/bin/diesel /usr/local/bin
 COPY --from=builder /build/target/release/server /usr/local/bin
 COPY db/migrations/ ./migrations
-ENTRYPOINT ["/usr/local/bin/server"]
+CMD ["/usr/local/bin/server"]
