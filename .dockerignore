@@ -1,0 +1,14 @@
+# Rust
+target/
+
+# Build system
+Dockerfile
+.dockerignore
+
+# Version control
+.git/
+.gitignore
+.github/
+
+# Development files
+.env

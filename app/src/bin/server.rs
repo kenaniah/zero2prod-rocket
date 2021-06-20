@@ -2,7 +2,9 @@
 extern crate rocket;
 extern crate app;
 
+use std::env;
+
 #[launch]
 pub fn ignite() -> rocket::Rocket<rocket::Build> {
-    app::app("postgres:///zero2prod")
+    app::app(&env::var("DATABASE_URL").unwrap_or("postgres:///zero2prod".into()))
 }
