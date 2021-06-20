@@ -22,10 +22,15 @@ COPY --from=cacher /build/target target
 COPY --from=cacher /usr/local/cargo /usr/local/cargo
 RUN cargo build --release
 
+FROM rust as diesel
+WORKDIR /build
+RUN cargo install diesel_cli
+
 FROM rust as runtime
 WORKDIR /build
 ENV ROCKET_ADDRESS 0.0.0.0
 EXPOSE 8000
+COPY --from=diesel /usr/local/cargo/bin/diesel /usr/local/bin
 COPY --from=builder /build/target/release/server /usr/local/bin
 COPY db/migrations/ ./migrations
 ENTRYPOINT ["/usr/local/bin/server"]
