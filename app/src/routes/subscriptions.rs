@@ -27,7 +27,7 @@ fn validate_name<'v>(name: &str) -> form::Result<'v, ()> {
     let forbidden_characters = ['/', '(', ')', '"', '<', '>', '\\', '{', '}'];
     let contains_forbidden_characters = name.chars().any(|g| forbidden_characters.contains(&g));
     if is_empty_or_whitespace || is_too_long || contains_forbidden_characters {
-        Err(form::Error::validation("invalid name"))?;
+        return Err(form::Error::validation("invalid name").into());
     }
     Ok(())
 }
