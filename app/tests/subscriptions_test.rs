@@ -91,4 +91,25 @@ mod test {
             );
         }
     }
+
+    #[test]
+    fn subscribe_returns_a_422_on_invalid_names() {
+        let mut env = super::setup::MockEnvironment::new();
+        let client = env.client();
+        let test_cases = vec![" ", "", "Some / One"];
+        for invalid_name in test_cases {
+            let response = client
+                .post("/subscriptions")
+                .header(ContentType::Form)
+                .body(
+                    Body {
+                        name: invalid_name.into(),
+                        email: "someone@gmail.com".into(),
+                    }
+                    .to_uri(),
+                )
+                .dispatch();
+            assert_eq!(response.status(), Status::UnprocessableEntity);
+        }
+    }
 }
